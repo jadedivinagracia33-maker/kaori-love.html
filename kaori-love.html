@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>For Kaori 💙</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Rajdhani:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* =========================================
+     RESET & BASE
+  ========================================= */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:        #00080f;
+    --deep:      #000d1a;
+    --primary:   #00c8e0;
+    --soft:      #5ef0ff;
+    --accent:    #0077a8;
+    --teal:      #00b4cc;
+    --mid:       #003d52;
+    --light:     #e0fbff;
+    --glow1:     rgba(0,200,224,0.55);
+    --glow2:     rgba(0,180,204,0.35);
+    --glow3:     rgba(94,240,255,0.2);
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    font-family: 'Rajdhani', sans-serif;
+    color: var(--light);
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+  }
+
+  /* =========================================
+     STAR CANVAS (shared background)
+  ========================================= */
+  #starCanvas {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* =========================================
+     SCREENS
+  ========================================= */
+  .screen {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    z-index: 10;
+    transition: opacity 0.9s ease, transform 0.9s ease;
+  }
+  .screen.hidden {
+    opacity: 0; pointer-events: none; transform: scale(1.04);
+  }
+
+  /* =========================================
+     PASSWORD SCREEN
+  ========================================= */
+  #passwordScreen {
+    background: radial-gradient(ellipse at center, #001a26 0%, #00080f 70%);
+  }
+
+  .pw-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    animation: orbFloat 8s ease-in-out infinite;
+  }
+  .pw-orb:nth-child(1){ width:340px;height:340px;background:rgba(0,100,140,0.3);top:-80px;left:-60px;animation-delay:0s; }
+  .pw-orb:nth-child(2){ width:260px;height:260px;background:rgba(0,180,200,0.2);bottom:-60px;right:-40px;animation-delay:-3s; }
+  .pw-orb:nth-child(3){ width:200px;height:200px;background:rgba(0,60,80,0.25);top:40%;left:60%;animation-delay:-5s; }
+
+  @keyframes orbFloat {
+    0%,100%{ transform: translateY(0) scale(1); }
+    50%{ transform: translateY(-30px) scale(1.05); }
+  }
+
+  .pw-box {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 28px;
+    z-index: 2;
+  }
+
+  .pw-icon {
+    font-size: clamp(52px, 12vw, 72px);
+    animation: iconPulse 2.6s ease-in-out infinite;
+    filter: drop-shadow(0 0 18px var(--primary));
+  }
+  @keyframes iconPulse {
+    0%,100%{ transform: scale(1); filter: drop-shadow(0 0 18px var(--primary)); }
+    50%{ transform: scale(1.12); filter: drop-shadow(0 0 34px var(--soft)); }
+  }
+
+  .pw-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 6vw, 34px);
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    color: var(--soft);
+    text-align: center;
+    text-shadow: 0 0 24px var(--glow1);
+  }
+  .pw-sub {
+    font-size: clamp(11px, 3vw, 13px);
+    letter-spacing: 0.3em;
+    color: var(--teal);
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  .pw-input-wrap {
+    position: relative;
+    width: min(320px, 88vw);
+  }
+  .pw-input-wrap::before {
+    content: '';
+    position: absolute; inset: -1px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--teal), var(--soft));
+    z-index: -1;
+    animation: borderSpin 3s linear infinite;
+    opacity: 0.7;
+  }
+  @keyframes borderSpin {
+    0%{ filter: hue-rotate(0deg); }
+    100%{ filter: hue-rotate(30deg); }
+  }
+
+  #pwInput {
+    width: 100%;
+    background: rgba(0, 15, 25, 0.9);
+    border: none;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    letter-spacing: 0.25em;
+    color: var(--soft);
+    text-align: center;
+    outline: none;
+    caret-color: var(--primary);
+  }
+  #pwInput::placeholder { color: rgba(0,200,224,0.3); letter-spacing: 0.15em; font-size: 14px; }
+
+  .pw-btn {
+    width: min(320px, 88vw);
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--teal), var(--primary));
+    background-size: 200% 200%;
+    color: var(--bg);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    cursor: pointer;
+    text-transform: uppercase;
+    animation: btnGrad 4s ease infinite;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 24px rgba(0,200,224,0.4);
+  }
+  @keyframes btnGrad {
+    0%,100%{ background-position:0% 50%; }
+    50%{ background-position:100% 50%; }
+  }
+  .pw-btn:active { transform: scale(0.97); }
+
+  .pw-error {
+    font-size: 13px;
+    letter-spacing: 0.2em;
+    color: #ff6b8a;
+    text-transform: uppercase;
+    opacity: 0;
+    transition: opacity 0.3s;
+    text-shadow: 0 0 10px rgba(255,107,138,0.6);
+  }
+  .pw-error.show { opacity: 1; animation: errShake 0.4s ease; }
+  @keyframes errShake {
+    0%,100%{ transform: translateX(0); }
+    20%{ transform: translateX(-8px); }
+    40%{ transform: translateX(8px); }
+    60%{ transform: translateX(-5px); }
+    80%{ transform: translateX(5px); }
+  }
+
+  /* Wrong password screen flash */
+  .flash-overlay {
+    position: fixed; inset: 0; z-index: 999;
+    background: rgba(255,50,80,0.12);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .flash-overlay.flash { opacity: 1; }
+
+  /* =========================================
+     INTRO SCREEN
+  ========================================= */
+  #introScreen {
+    background: radial-gradient(ellipse at center, #001520 0%, #00080f 80%);
+    overflow: hidden;
+  }
+
+  #introCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+
+  .intro-content {
+    position: relative; z-index: 2;
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    text-align: center; padding: 20px;
+  }
+
+  .intro-heart-anim {
+    font-size: clamp(60px, 18vw, 100px);
+    animation: introHeartBeat 1.4s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px var(--primary)) drop-shadow(0 0 60px var(--glow2));
+  }
+  @keyframes introHeartBeat {
+    0%,100%{ transform: scale(1); }
+    15%{ transform: scale(1.2); }
+    30%{ transform: scale(1); }
+    45%{ transform: scale(1.1); }
+  }
+
+  .intro-line1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 8vw, 52px);
+    font-weight: 300; font-style: italic;
+    color: var(--soft);
+    text-shadow: 0 0 30px var(--glow1);
+    opacity: 0;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.3s;
+  }
+  .intro-line2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(16px, 4.5vw, 26px);
+    font-weight: 300;
+    color: var(--teal);
+    letter-spacing: 0.12em;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 0.8s;
+  }
+  .intro-btn {
+    margin-top: 18px;
+    padding: 14px 40px;
+    border: 1.5px solid var(--primary);
+    border-radius: 50px;
+    background: transparent;
+    color: var(--soft);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.3em;
+    cursor: pointer;
+    text-transform: uppercase;
+    opacity: 0;
+    animation: fadeUp 1s ease forwards;
+    animation-delay: 1.5s;
+    transition: background 0.3s, box-shadow 0.3s, transform 0.2s;
+    box-shadow: 0 0 18px rgba(0,200,224,0.25);
+  }
+  .intro-btn:hover, .intro-btn:active {
+    background: rgba(0,200,224,0.12);
+    box-shadow: 0 0 30px rgba(0,200,224,0.5);
+    transform: scale(1.04);
+  }
+
+  @keyframes fadeUp {
+    from{ opacity:0; transform: translateY(20px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  /* =========================================
+     MAIN HEART SCREEN
+  ========================================= */
+  #heartScreen {
+    background: radial-gradient(ellipse at 50% 60%, #001824 0%, #00080f 75%);
+    overflow: hidden;
+    flex-direction: column; gap: 16px;
+  }
+
+  #heartCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+
+  .heart-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(13px, 3.5vw, 17px);
+    letter-spacing: 0.3em;
+    color: var(--teal);
+    text-transform: uppercase;
+    z-index: 2;
+    opacity: 0.8;
+  }
+
+  /* 3D Heart SVG container */
+  #heartContainer {
+    position: relative;
+    z-index: 2;
+    cursor: pointer;
+    width: clamp(200px, 55vw, 320px);
+    height: clamp(200px, 55vw, 320px);
+    display: flex; align-items: center; justify-content: center;
+  }
+  #heartContainer:hover #heartSvg { filter: drop-shadow(0 0 40px var(--primary)) drop-shadow(0 0 80px var(--glow2)); }
+
+  #heartSvg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 28px var(--primary)) drop-shadow(0 0 56px var(--glow2));
+    animation: heartPulse3d 2s ease-in-out infinite;
+    transition: filter 0.3s;
+  }
+  @keyframes heartPulse3d {
+    0%,100%{ transform: scale(1) rotate(-2deg); }
+    50%{ transform: scale(1.06) rotate(2deg); }
+  }
+
+  .heart-hint {
+    font-size: clamp(11px, 3vw, 13px);
+    letter-spacing: 0.25em;
+    color: var(--primary);
+    text-transform: uppercase;
+    z-index: 2;
+    opacity: 0.65;
+    animation: hintBlink 2.5s ease-in-out infinite;
+  }
+  @keyframes hintBlink {
+    0%,100%{ opacity: 0.65; } 50%{ opacity: 0.2; }
+  }
+
+  /* Crack overlay canvas */
+  #crackCanvas {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    z-index: 3;
+    width: clamp(200px, 55vw, 320px);
+    height: clamp(200px, 55vw, 320px);
+  }
+
+  /* Split halves */
+  #heartLeft, #heartRight {
+    position: absolute;
+    top: 50%; left: 50%;
+    width: clamp(200px, 55vw, 320px);
+    height: clamp(200px, 55vw, 320px);
+    pointer-events: none;
+    opacity: 0;
+    z-index: 4;
+    overflow: hidden;
+  }
+  #heartLeft {
+    transform: translate(-50%, -50%);
+    clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
+  }
+  #heartRight {
+    transform: translate(-50%, -50%);
+    clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+  }
+  #heartLeft svg, #heartRight svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 28px var(--primary));
+  }
+
+  /* =========================================
+     MESSAGE SCREEN
+  ========================================= */
+  #messageScreen {
+    background: radial-gradient(ellipse at 50% 40%, #001824 0%, #00080f 80%);
+    overflow: hidden;
+    padding: 20px;
+    justify-content: flex-start;
+    padding-top: max(40px, 6vh);
+  }
+
+  #msgCanvas { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+
+  .msg-wrapper {
+    position: relative; z-index: 2;
+    width: min(680px, 96vw);
+    display: flex; flex-direction: column; align-items: center; gap: 22px;
+  }
+
+  .msg-header {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(22px, 6vw, 36px);
+    font-weight: 300; font-style: italic;
+    color: var(--soft);
+    text-align: center;
+    text-shadow: 0 0 28px var(--glow1);
+    letter-spacing: 0.08em;
+  }
+
+  .msg-scroll-area {
+    width: 100%;
+    max-height: 58vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: var(--mid) transparent;
+    padding: 0 4px;
+  }
+  .msg-scroll-area::-webkit-scrollbar { width: 3px; }
+  .msg-scroll-area::-webkit-scrollbar-track { background: transparent; }
+  .msg-scroll-area::-webkit-scrollbar-thumb { background: var(--mid); border-radius: 3px; }
+
+  .msg-card {
+    background: rgba(0, 40, 60, 0.55);
+    border: 1px solid rgba(0,200,224,0.18);
+    border-radius: 18px;
+    padding: clamp(20px, 5vw, 36px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 0 40px rgba(0,200,224,0.08), inset 0 0 30px rgba(0,180,204,0.04);
+  }
+
+  #msgText {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(15px, 3.8vw, 19px);
+    line-height: 1.85;
+    color: rgba(224, 251, 255, 0.92);
+    white-space: pre-wrap;
+    text-align: left;
+  }
+
+  #msgCursor {
+    display: inline-block;
+    width: 2px; height: 1.1em;
+    background: var(--primary);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: cursorBlink 0.8s ease infinite;
+  }
+  @keyframes cursorBlink { 0%,50%{opacity:1;} 51%,100%{opacity:0;} }
+
+  .msg-forever {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(26px, 7vw, 44px);
+    font-weight: 300; font-style: italic;
+    color: var(--soft);
+    text-shadow: 0 0 30px var(--glow1), 0 0 60px var(--glow2);
+    text-align: center;
+    opacity: 0;
+    letter-spacing: 0.1em;
+    animation: none;
+  }
+  .msg-forever.show {
+    animation: foreverReveal 2s ease forwards;
+  }
+  @keyframes foreverReveal {
+    from{ opacity:0; transform: scale(0.8); }
+    to{ opacity:1; transform: scale(1); }
+  }
+
+  /* =========================================
+     RAIN CANVAS (heart rain on top of message)
+  ========================================= */
+  #rainCanvas {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+  #rainCanvas.show { opacity: 1; }
+
+  /* =========================================
+     SHARED PARTICLE BURST CANVAS
+  ========================================= */
+  #burstCanvas {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 20;
+  }
+
+</style>
+</head>
+<body>
+
+<!-- Background starfield -->
+<canvas id="starCanvas"></canvas>
+
+<!-- Burst canvas for heart explosion -->
+<canvas id="burstCanvas"></canvas>
+
+<!-- Heart rain -->
+<canvas id="rainCanvas"></canvas>
+
+<!-- Flash overlay for wrong password -->
+<div class="flash-overlay" id="flashOverlay"></div>
+
+<!-- ==============================
+     SCREEN 1: PASSWORD
+============================== -->
+<div class="screen" id="passwordScreen">
+  <div class="pw-orb"></div>
+  <div class="pw-orb"></div>
+  <div class="pw-orb"></div>
+  <div class="pw-box">
+    <div class="pw-icon">💙</div>
+    <div class="pw-title">Enter The Code</div>
+    <div class="pw-sub">Protected with love</div>
+    <div class="pw-input-wrap">
+      <input type="password" id="pwInput" placeholder="Enter password..." autocomplete="off" autocorrect="off" spellcheck="false">
+    </div>
+    <button class="pw-btn" id="pwBtn">UNLOCK 💙</button>
+    <div class="pw-error" id="pwError">❌ Wrong password, try again</div>
+  </div>
+</div>
+
+<!-- ==============================
+     SCREEN 2: INTRO ANIMATION
+============================== -->
+<div class="screen hidden" id="introScreen">
+  <canvas id="introCanvas"></canvas>
+  <div class="intro-content">
+    <div class="intro-heart-anim">💙</div>
+    <div class="intro-line1">For Kaori</div>
+    <div class="intro-line2">Something special is waiting for you...</div>
+    <button class="intro-btn" id="introBtn">Open Your Gift 💙</button>
+  </div>
+</div>
+
+<!-- ==============================
+     SCREEN 3: HEART
+============================== -->
+<div class="screen hidden" id="heartScreen">
+  <canvas id="heartCanvas"></canvas>
+  <div class="heart-title">Click the heart</div>
+
+  <div id="heartContainer">
+    <!-- Left half (for split animation) -->
+    <div id="heartLeft">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="hgL" cx="45%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#a0efff"/>
+            <stop offset="35%" stop-color="#00c8e0"/>
+            <stop offset="70%" stop-color="#006688"/>
+            <stop offset="100%" stop-color="#002233"/>
+          </radialGradient>
+          <filter id="glowL"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <path d="M100,160 C60,130 20,100 20,65 C20,40 40,25 60,28 C75,30 88,40 100,55 C112,40 125,30 140,28 C160,25 180,40 180,65 C180,100 140,130 100,160Z" fill="url(#hgL)" filter="url(#glowL)"/>
+      </svg>
+    </div>
+    <!-- Right half (for split animation) -->
+    <div id="heartRight">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="hgR" cx="45%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#a0efff"/>
+            <stop offset="35%" stop-color="#00c8e0"/>
+            <stop offset="70%" stop-color="#006688"/>
+            <stop offset="100%" stop-color="#002233"/>
+          </radialGradient>
+          <filter id="glowR"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        <path d="M100,160 C60,130 20,100 20,65 C20,40 40,25 60,28 C75,30 88,40 100,55 C112,40 125,30 140,28 C160,25 180,40 180,65 C180,100 140,130 100,160Z" fill="url(#hgR)" filter="url(#glowR)"/>
+      </svg>
+    </div>
+
+    <!-- Main heart SVG -->
+    <svg id="heartSvg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="hg" cx="45%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#a0efff"/>
+          <stop offset="35%" stop-color="#00c8e0"/>
+          <stop offset="70%" stop-color="#006688"/>
+          <stop offset="100%" stop-color="#002233"/>
+        </radialGradient>
+        <radialGradient id="shine" cx="38%" cy="30%" r="25%">
+          <stop offset="0%" stop-color="rgba(255,255,255,0.55)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </radialGradient>
+        <filter id="glow3d">
+          <feGaussianBlur stdDeviation="4" result="blur"/>
+          <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0  0 0.8 1 0 0  0 0.9 1 0 0  0 0 0 1.2 0" result="coloredBlur"/>
+          <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <filter id="inner">
+          <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="shadow"/>
+          <feOffset dx="3" dy="4" result="offsetShadow"/>
+          <feComposite in="SourceGraphic" in2="offsetShadow" operator="over"/>
+        </filter>
+      </defs>
+      <!-- Shadow -->
+      <ellipse cx="100" cy="168" rx="48" ry="8" fill="rgba(0,180,220,0.18)"/>
+      <!-- Main shape -->
+      <path d="M100,160 C60,130 20,100 20,65 C20,40 40,25 60,28 C75,30 88,40 100,55 C112,40 125,30 140,28 C160,25 180,40 180,65 C180,100 140,130 100,160Z"
+            fill="url(#hg)" filter="url(#glow3d)"/>
+      <!-- Specular shine top-left -->
+      <path d="M100,160 C60,130 20,100 20,65 C20,40 40,25 60,28 C75,30 88,40 100,55 C112,40 125,30 140,28 C160,25 180,40 180,65 C180,100 140,130 100,160Z"
+            fill="url(#shine)"/>
+      <!-- Edge depth shadow -->
+      <path d="M100,160 C60,130 20,100 20,65 C20,40 40,25 60,28 C75,30 88,40 100,55"
+            fill="none" stroke="rgba(0,30,50,0.4)" stroke-width="5" stroke-linecap="round"/>
+      <!-- Small bright inner highlight -->
+      <ellipse cx="74" cy="54" rx="12" ry="8" fill="rgba(200,250,255,0.22)" transform="rotate(-30,74,54)"/>
+    </svg>
+
+    <!-- Crack canvas overlay -->
+    <canvas id="crackCanvas"></canvas>
+  </div>
+
+  <div class="heart-hint">tap to open 💙</div>
+</div>
+
+<!-- ==============================
+     SCREEN 4: MESSAGE
+============================== -->
+<div class="screen hidden" id="messageScreen">
+  <canvas id="msgCanvas"></canvas>
+  <div class="msg-wrapper">
+    <div class="msg-header">💙 A Message For You, Kaori 💙</div>
+    <div class="msg-scroll-area">
+      <div class="msg-card">
+        <div id="msgText"></div><span id="msgCursor"></span>
+      </div>
+    </div>
+    <div class="msg-forever" id="msgForever">Forever 💙</div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   UTILITIES
+========================================================= */
+const $ = id => document.getElementById(id);
+const raf = requestAnimationFrame;
+
+function lerp(a,b,t){ return a+(b-a)*t; }
+function rand(min,max){ return Math.random()*(max-min)+min; }
+function randInt(min,max){ return Math.floor(rand(min,max+1)); }
+
+/* =========================================================
+   STAR FIELD (always running)
+========================================================= */
+(function initStars(){
+  const c = $('starCanvas');
+  const ctx = c.getContext('2d');
+  let stars = [];
+  function resize(){ c.width=innerWidth; c.height=innerHeight; buildStars(); }
+  function buildStars(){
+    stars = Array.from({length:160},()=>({
+      x: rand(0,c.width), y: rand(0,c.height),
+      r: rand(0.3,1.6), speed: rand(0.05,0.25),
+      opacity: rand(0.2,0.9), twinkle: rand(0,Math.PI*2)
+    }));
+  }
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const t = Date.now()*0.001;
+    for(const s of stars){
+      s.twinkle += 0.015;
+      const op = s.opacity * (0.6 + 0.4*Math.sin(s.twinkle));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+      ctx.fillStyle = `rgba(140,230,255,${op})`;
+      ctx.fill();
+      s.y += s.speed;
+      if(s.y > c.height){ s.y=0; s.x=rand(0,c.width); }
+    }
+    raf(draw);
+  }
+  window.addEventListener('resize', resize);
+  resize(); draw();
+})();
+
+/* =========================================================
+   BURST CANVAS (particle explosions)
+========================================================= */
+const burstCtx = $('burstCanvas').getContext('2d');
+let burstParticles = [];
+function resizeBurst(){ $('burstCanvas').width=innerWidth; $('burstCanvas').height=innerHeight; }
+window.addEventListener('resize', resizeBurst); resizeBurst();
+
+function spawnBurst(x, y, count=80){
+  for(let i=0;i<count;i++){
+    const angle = rand(0, Math.PI*2);
+    const speed = rand(1.5, 7);
+    burstParticles.push({
+      x, y,
+      vx: Math.cos(angle)*speed, vy: Math.sin(angle)*speed - rand(1,3),
+      life: 1, decay: rand(0.012,0.028),
+      r: rand(2,6),
+      hue: rand(170,220),
+      type: Math.random() > 0.5 ? 'circle' : 'heart'
+    });
+  }
+}
+
+function drawBurst(){
+  burstCtx.clearRect(0,0,$('burstCanvas').width,$('burstCanvas').height);
+  burstParticles = burstParticles.filter(p => p.life > 0);
+  for(const p of burstParticles){
+    p.x += p.vx; p.y += p.vy;
+    p.vy += 0.12; p.life -= p.decay;
+    burstCtx.globalAlpha = p.life;
+    burstCtx.fillStyle = `hsl(${p.hue},90%,65%)`;
+    burstCtx.shadowColor = `hsl(${p.hue},100%,70%)`;
+    burstCtx.shadowBlur = 8;
+    if(p.type === 'circle'){
+      burstCtx.beginPath(); burstCtx.arc(p.x,p.y,p.r,0,Math.PI*2); burstCtx.fill();
+    } else {
+      drawMiniHeart(burstCtx, p.x, p.y, p.r*1.5);
+    }
+  }
+  burstCtx.globalAlpha = 1; burstCtx.shadowBlur = 0;
+  raf(drawBurst);
+}
+drawBurst();
+
+function drawMiniHeart(ctx, x, y, s){
+  ctx.save();
+  ctx.translate(x,y); ctx.scale(s/8,s/8);
+  ctx.beginPath();
+  ctx.moveTo(0,0);
+  ctx.bezierCurveTo(-1,-3,-5,-3,-5,0);
+  ctx.bezierCurveTo(-5,3,0,6,0,8);
+  ctx.bezierCurveTo(0,6,5,3,5,0);
+  ctx.bezierCurveTo(5,-3,1,-3,0,0);
+  ctx.fill();
+  ctx.restore();
+}
+
+/* =========================================================
+   HEART RAIN CANVAS
+========================================================= */
+(function initRain(){
+  const c = $('rainCanvas');
+  const ctx = c.getContext('2d');
+  let drops = [];
+  function resize(){ c.width=innerWidth; c.height=innerHeight; }
+  function buildDrops(){
+    drops = Array.from({length:50},()=>({
+      x: rand(0,c.width), y: rand(-c.height,0),
+      size: rand(12,32), speed: rand(1.2,3.5),
+      opacity: rand(0.15,0.55), swing: rand(0,Math.PI*2), swingAmt: rand(0.3,1.2)
+    }));
+  }
+  window.addEventListener('resize',()=>{ resize(); buildDrops(); });
+  resize(); buildDrops();
+
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const t = Date.now()*0.001;
+    for(const d of drops){
+      d.y += d.speed;
+      d.x += Math.sin(t*0.8 + d.swing) * d.swingAmt;
+      if(d.y > c.height+40){ d.y = rand(-80,-10); d.x = rand(0,c.width); }
+      ctx.globalAlpha = d.opacity;
+      ctx.fillStyle = `hsl(${rand(185,210)},90%,65%)`;
+      ctx.shadowColor = 'rgba(0,200,224,0.6)';
+      ctx.shadowBlur = 10;
+      drawMiniHeart(ctx, d.x, d.y, d.size);
+    }
+    ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+    raf(draw);
+  }
+  draw();
+})();
+
+/* =========================================================
+   INTRO CANVAS (floating hearts + sparkles)
+========================================================= */
+(function initIntro(){
+  const c = $('introCanvas');
+  const ctx = c.getContext('2d');
+  let items = [];
+  function resize(){ c.width=innerWidth; c.height=innerHeight; buildItems(); }
+  function buildItems(){
+    items = Array.from({length:35},()=>({
+      x: rand(0,c.width), y: rand(0,c.height),
+      size: rand(8,22), speed: rand(0.3,0.9),
+      opacity: rand(0.1,0.5), phase: rand(0,Math.PI*2), type: Math.random()>0.4?'heart':'spark'
+    }));
+  }
+  window.addEventListener('resize', resize); resize();
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const t = Date.now()*0.001;
+    for(const p of items){
+      p.y -= p.speed; p.x += Math.sin(t*0.5+p.phase)*0.4;
+      if(p.y < -40){ p.y = c.height+20; p.x = rand(0,c.width); }
+      const op = p.opacity*(0.5+0.5*Math.sin(t*1.2+p.phase));
+      ctx.globalAlpha = op;
+      ctx.fillStyle = `hsl(${rand(185,210)},85%,65%)`;
+      ctx.shadowColor='rgba(0,200,224,0.5)'; ctx.shadowBlur=12;
+      if(p.type==='heart'){ drawMiniHeart(ctx,p.x,p.y,p.size); }
+      else {
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.size*0.25,0,Math.PI*2); ctx.fill();
+      }
+    }
+    ctx.globalAlpha=1; ctx.shadowBlur=0;
+    raf(draw);
+  }
+  draw();
+})();
+
+/* =========================================================
+   MESSAGE BG CANVAS
+========================================================= */
+(function initMsgBg(){
+  const c = $('msgCanvas');
+  const ctx = c.getContext('2d');
+  let floaters = [];
+  function resize(){ c.width=innerWidth; c.height=innerHeight; }
+  window.addEventListener('resize',resize); resize();
+  floaters = Array.from({length:30},()=>({
+    x: rand(0,innerWidth), y: rand(0,innerHeight),
+    size: rand(6,18), speed: rand(0.2,0.6), phase: rand(0,Math.PI*2)
+  }));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const t = Date.now()*0.001;
+    for(const p of floaters){
+      p.y -= p.speed; p.x += Math.sin(t*0.4+p.phase)*0.5;
+      if(p.y < -30){ p.y=c.height+20; p.x=rand(0,c.width); }
+      const op = 0.08+0.1*Math.sin(t+p.phase);
+      ctx.globalAlpha=op;
+      ctx.fillStyle='rgba(0,200,224,0.9)';
+      ctx.shadowColor='rgba(0,200,224,0.4)'; ctx.shadowBlur=8;
+      drawMiniHeart(ctx,p.x,p.y,p.size);
+    }
+    ctx.globalAlpha=1; ctx.shadowBlur=0;
+    raf(draw);
+  }
+  draw();
+})();
+
+/* =========================================================
+   HEART BACKGROUND CANVAS (on heart screen)
+========================================================= */
+(function initHeartBg(){
+  const c = $('heartCanvas');
+  const ctx = c.getContext('2d');
+  let particles=[];
+  function resize(){ c.width=innerWidth; c.height=innerHeight; }
+  window.addEventListener('resize',resize); resize();
+  particles = Array.from({length:28},()=>({
+    x:rand(0,innerWidth), y:rand(0,innerHeight),
+    size:rand(4,14), speed:rand(0.2,0.7), phase:rand(0,Math.PI*2)
+  }));
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const t=Date.now()*0.001;
+    for(const p of particles){
+      p.y-=p.speed; p.x+=Math.sin(t*0.5+p.phase)*0.4;
+      if(p.y<-30){p.y=c.height+20;p.x=rand(0,c.width);}
+      const op=0.1+0.12*Math.sin(t+p.phase);
+      ctx.globalAlpha=op; ctx.fillStyle='rgba(0,200,224,0.9)';
+      ctx.shadowColor='rgba(0,200,224,0.5)'; ctx.shadowBlur=10;
+      drawMiniHeart(ctx,p.x,p.y,p.size);
+    }
+    ctx.globalAlpha=1; ctx.shadowBlur=0;
+    raf(draw);
+  }
+  draw();
+})();
+
+/* =========================================================
+   PASSWORD LOGIC
+========================================================= */
+const PASSWORD = 'ILOVEKAORI';
+
+function showScreen(id){
+  ['passwordScreen','introScreen','heartScreen','messageScreen'].forEach(s=>{
+    const el = $(s);
+    if(s===id){ el.classList.remove('hidden'); }
+    else { el.classList.add('hidden'); }
+  });
+}
+
+$('pwBtn').addEventListener('click', checkPassword);
+$('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') checkPassword(); });
+
+function checkPassword(){
+  const val = $('pwInput').value.trim().toUpperCase();
+  if(val === PASSWORD){
+    $('passwordScreen').style.transition = 'opacity 1.2s ease, transform 1.2s ease';
+    $('passwordScreen').classList.add('hidden');
+    setTimeout(()=>{ showScreen('introScreen'); }, 600);
+  } else {
+    const err = $('pwError');
+    const flash = $('flashOverlay');
+    err.classList.remove('show');
+    void err.offsetWidth;
+    err.classList.add('show');
+    flash.classList.add('flash');
+    setTimeout(()=>flash.classList.remove('flash'), 300);
+    $('pwInput').value='';
+  }
+}
+
+/* =========================================================
+   INTRO -> HEART SCREEN
+========================================================= */
+$('introBtn').addEventListener('click', ()=>{
+  $('introScreen').classList.add('hidden');
+  setTimeout(()=>{ showScreen('heartScreen'); }, 500);
+});
+
+/* =========================================================
+   HEART CRACK & SPLIT ANIMATION
+========================================================= */
+let heartClicked = false;
+
+$('heartContainer').addEventListener('click', ()=>{ if(!heartClicked) crackHeart(); });
+$('heartContainer').addEventListener('touchend', e=>{ e.preventDefault(); if(!heartClicked) crackHeart(); });
+
+function crackHeart(){
+  heartClicked = true;
+
+  // Setup crack canvas size to match container
+  const container = $('heartContainer');
+  const rect = container.getBoundingClientRect();
+  const sz = rect.width;
+  const cc = $('crackCanvas');
+  cc.width = sz; cc.height = sz;
+
+  $('heartSvg').style.animation = 'none';
+
+  // Phase 1: draw cracks over 800ms
+  let crackProgress = 0;
+  const crackCtx = cc.getContext('2d');
+  const cracks = generateCracks(sz);
+
+  const crackInterval = setInterval(()=>{
+    crackProgress = Math.min(crackProgress + 0.04, 1);
+    drawCracks(crackCtx, cracks, crackProgress, sz);
+    if(crackProgress >= 1){ clearInterval(crackInterval); splitHeart(sz); }
+  }, 30);
+}
+
+function generateCracks(sz){
+  const cx = sz/2, cy = sz*0.52;
+  const lines = [];
+  // Main vertical crack from top to bottom through center
+  lines.push([
+    {x:cx, y:cy-sz*0.22},
+    {x:cx+sz*0.02, y:cy-sz*0.1},
+    {x:cx-sz*0.01, y:cy},
+    {x:cx+sz*0.01, y:cy+sz*0.1},
+    {x:cx, y:cy+sz*0.25}
+  ]);
+  // Branch cracks
+  lines.push([{x:cx,y:cy},{x:cx+sz*0.1,y:cy-sz*0.08},{x:cx+sz*0.18,y:cy-sz*0.12}]);
+  lines.push([{x:cx,y:cy},{x:cx-sz*0.12,y:cy-sz*0.06},{x:cx-sz*0.2,y:cy-sz*0.14}]);
+  lines.push([{x:cx,y:cy+sz*0.05},{x:cx+sz*0.08,y:cy+sz*0.15}]);
+  lines.push([{x:cx,y:cy-sz*0.1},{x:cx-sz*0.07,y:cy+sz*0.05}]);
+  return lines;
+}
+
+function drawCracks(ctx, cracks, progress, sz){
+  ctx.clearRect(0,0,sz,sz);
+  ctx.strokeStyle = 'rgba(200,240,255,0.9)';
+  ctx.lineWidth = 1.5;
+  ctx.shadowColor = 'rgba(0,220,255,0.8)';
+  ctx.shadowBlur = 6;
+  for(const line of cracks){
+    const pts = line;
+    const totalPts = Math.max(2, Math.floor(pts.length * progress));
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for(let i=1;i<totalPts;i++){ ctx.lineTo(pts[i].x, pts[i].y); }
+    ctx.stroke();
+  }
+  ctx.shadowBlur=0;
+}
+
+function splitHeart(sz){
+  const container = $('heartContainer');
+  const rect = container.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+
+  // Show halves, hide main SVG
+  $('heartSvg').style.opacity = '0';
+  $('crackCanvas').style.opacity = '0';
+  $('heartLeft').style.opacity = '1';
+  $('heartRight').style.opacity = '1';
+
+  // Spawn particle burst
+  spawnBurst(cx, cy, 120);
+  spawnBurst(cx-20, cy-30, 60);
+  spawnBurst(cx+20, cy-30, 60);
+
+  // Animate split
+  let progress = 0;
+  const splitAnim = setInterval(()=>{
+    progress = Math.min(progress+0.025, 1);
+    const ease = 1 - Math.pow(1-progress,3);
+    const dist = ease * sz * 0.7;
+    const dropY = ease * sz * 0.2;
+    $('heartLeft').style.transform = `translate(calc(-50% - ${dist}px), calc(-50% + ${dropY}px)) rotate(${-ease*18}deg)`;
+    $('heartRight').style.transform = `translate(calc(-50% + ${dist}px), calc(-50% + ${dropY}px)) rotate(${ease*18}deg)`;
+
+    if(progress >= 1){
+      clearInterval(splitAnim);
+      // Extra burst at full split
+      spawnBurst(cx, cy, 80);
+      setTimeout(goToMessage, 900);
+    }
+  },16);
+}
+
+/* =========================================================
+   MESSAGE SCREEN + TYPEWRITER
+========================================================= */
+const MESSAGE = `Dear kaori since the first day that i met you i didn't expect you to be my gf the moment i met you my world change from full of anger and sadness your the one who changed it to smile and happiness and love and i will promise that i won't leave you your the most special gf that have come in my life you made my tough personality became a child personality and a kind personality which is so gooddd cause they started treating me like a good person now and i will thank you for that i promise i you when we live together na i won't let anyone make our relationship rough or hard no one can make our relationship fall apart and i may can't offer much money but i can offer full of love loyalty and trust and also i won't let you suffer from abuse just like the other girls out there and just so you know i loved you so so soooooo muchhhhh that when i was answering the diagnostic test i completely zoned out i keep thing about our future and also don't change that dirty minded HEHHEHEHHE CAUSE WE'RE THE SAMEEEE I'm so proud of you po and be careful at school alright? Focus on school not on me do homeworks and if someone bully you ignore them they didn't deserve you your special I LOVE YOUUU SOO SOOO MUCHHHHHH BABYYYYY NO ONE CAN COMPARE MY LOVE TO YOU AND JUST SO YOU KNOW IM SO OBSESSED WITH YOU I LOVED YOU SOOOO MUCHHHH sorry for being cold im just that kind of person cause i don't talk to much and plus those laugh we're never faked that's my pure and innocent laugh not a fake one
+
+I LOVE YOU SO SO MUCHHH
+
+And also i hope you wouldn't surrender in this relationship CAUSE I WON'T FUCKING SURRENDER IN THIS RELATIONSHIP YOU AND ME WILL BE TOGETHER NO MATTER WHAT HAPPENSSS ALRIGHT take careeee
+
+I LOVE YOUUU MY BEAUTIFUL PRINCESSS`;
+
+function goToMessage(){
+  showScreen('messageScreen');
+  setTimeout(startTypewriter, 600);
+}
+
+function startTypewriter(){
+  const el = $('msgText');
+  const cursor = $('msgCursor');
+  const scrollArea = document.querySelector('.msg-scroll-area');
+  let i = 0;
+  const speed = 22; // ms per char
+
+  function type(){
+    if(i < MESSAGE.length){
+      el.textContent = MESSAGE.slice(0, i+1);
+      i++;
+      // Auto scroll
+      scrollArea.scrollTop = scrollArea.scrollHeight;
+      setTimeout(type, speed);
+    } else {
+      cursor.style.display='none';
+      showForever();
+    }
+  }
+  type();
+}
+
+function showForever(){
+  const f = $('msgForever');
+  f.classList.add('show');
+  $('rainCanvas').classList.add('show');
+}
+
+/* =========================================================
+   INITIAL STATE
+========================================================= */
+showScreen('passwordScreen');
+$('pwInput').focus();
+</script>
+</body>
+</html>
